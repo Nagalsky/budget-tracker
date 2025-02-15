@@ -1,61 +1,21 @@
 'use client'
 
-import LoadingButton from '@/components/common/loading-button'
+import { forgetPassword } from '@/actions/auth.actions'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { authClient } from '@/lib/auth-client'
-import { forgotPasswordSchema } from '@/schemas/auth.schema'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { cn } from '@/lib/utils'
 import { AlertCircle } from 'lucide-react'
+import Form from 'next/form'
 import Link from 'next/link'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
+import { useActionState } from 'react'
+import { Label } from '../ui/label'
+import SubmitButton from './submit-button'
 
 export default function ForgotPasswordForm() {
-	const [pending, setPending] = useState(false)
-	const [formError, setFormError] = useState<string | null>(null)
-	const [success, setSuccess] = useState(false)
+	const [state, action] = useActionState(forgetPassword, undefined)
 
-	const form = useForm<z.infer<typeof forgotPasswordSchema>>({
-		resolver: zodResolver(forgotPasswordSchema),
-		defaultValues: {
-			email: '',
-		},
-	})
-
-	const onSubmit = async (values: z.infer<typeof forgotPasswordSchema>) => {
-		await authClient.forgetPassword(
-			{
-				email: values.email,
-				redirectTo: '/reset-password',
-			},
-			{
-				onRequest: () => {
-					setPending(true)
-					setFormError(null)
-				},
-				onSuccess: () => {
-					setSuccess(true)
-				},
-				onError: error => {
-					setFormError(error.error.message ?? 'Something went wrong')
-				},
-			}
-		)
-		setPending(false)
-	}
-
-	if (success) {
+	if (state?.success) {
 		return (
 			<Card className='md:max-w-md mx-auto'>
 				<CardContent className='pt-6'>
@@ -65,9 +25,11 @@ export default function ForgotPasswordForm() {
 							We have sent you a password reset link. Please check your email.
 						</AlertDescription>
 					</Alert>
-					<Link href='/sign-in' className='text-primary hover:underline'>
-						Back to sign in
-					</Link>
+					<div className='mt-4 text-center text-sm'>
+						<Link href='/sign-up' className='underline underline-offset-4'>
+							Back to sign in
+						</Link>
+					</div>
 				</CardContent>
 			</Card>
 		)
@@ -81,39 +43,39 @@ export default function ForgotPasswordForm() {
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-						{formError && (
-							<Alert variant='destructive'>
-								<AlertCircle className='h-4 w-4' />
-								<AlertTitle>Error</AlertTitle>
-								<AlertDescription>{formError}</AlertDescription>
-							</Alert>
-						)}
-						<FormField
-							control={form.control}
+				<Form action={action} className='space-y-6'>
+					{state?.message && (
+						<Alert variant='destructive'>
+							<AlertCircle className='h-4 w-4' />
+							<AlertTitle>Error</AlertTitle>
+							<AlertDescription>{state.message}</AlertDescription>
+						</Alert>
+					)}
+
+					<div className='flex flex-col gap-2'>
+						<Label
+							htmlFor='email'
+							className={cn(state?.errors?.email && 'text-destructive')}
+						>
+							Email
+						</Label>
+						<Input
+							id='email'
 							name='email'
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Email</FormLabel>
-									<FormControl>
-										<Input
-											type='email'
-											placeholder='Enter your email'
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
+							type='email'
+							placeholder='john@example.com'
+							className={cn(state?.errors?.email && 'border-destructive')}
+							defaultValue={state?.data?.email}
 						/>
-						<LoadingButton pending={pending} className='w-full'>
-							Send Reset Link
-						</LoadingButton>
-					</form>
+						{state?.errors?.email && (
+							<p className='text-destructive'>{state.errors.email}</p>
+						)}
+					</div>
+
+					<SubmitButton className='w-full'>Send reset link</SubmitButton>
 				</Form>
-				<div className='mt-4 text-center'>
-					<Link href='/sign-in' className='text-primary hover:underline'>
+				<div className='mt-4 text-center text-sm'>
+					<Link href='/sign-up' className='underline underline-offset-4'>
 						Back to sign in
 					</Link>
 				</div>

@@ -9,6 +9,7 @@ export type SignInFormState =
 				password?: string[]
 			}
 			message?: string
+			redirect?: string
 	  }
 	| undefined
 
@@ -37,6 +38,7 @@ export type ForgotPasswordFormState =
 				email?: string[]
 			}
 			message?: string
+			success?: boolean
 	  }
 	| undefined
 
@@ -51,5 +53,6 @@ export type ResetPasswordFormState =
 				confirmPassword?: string[]
 			}
 			message?: string
+			redirect?: string
 	  }
 	| undefined

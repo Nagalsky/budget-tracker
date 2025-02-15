@@ -1,89 +1,45 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-
-import { authClient } from '@/lib/auth-client'
-import { signInSchema } from '@/schemas/auth.schema'
 import { AlertCircle } from 'lucide-react'
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
-import { Button } from '../ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from '../ui/form'
-import { Input } from '../ui/input'
+import Link from 'next/link'
+
+import { signIn } from '@/actions/auth.actions'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { cn } from '@/lib/utils'
+import Form from 'next/form'
+import { useRouter } from 'next/navigation'
+import { useActionState, useEffect } from 'react'
 import { Separator } from '../ui/separator'
-import LoadingButton from './loading-button'
+import SignInWithGoogle from './sign-in-with-google'
+import SubmitButton from './submit-button'
+
+const FORM_FIELDS = [
+	{
+		label: 'Email',
+		name: 'email' as const,
+		type: 'email',
+		placeholder: 'john@example.com',
+	},
+	{
+		label: 'Password',
+		name: 'password' as const,
+		type: 'password',
+		placeholder: 'Enter your password',
+	},
+]
 
 export default function SignInForm() {
 	const router = useRouter()
-	const [pendingCredentials, setPendingCredentials] = useState(false)
-	const [pendingGoogle, setPendingGoogle] = useState(false)
-	const [formError, setFormError] = useState<string | null>(null)
+	const [state, action] = useActionState(signIn, undefined)
 
-	const form = useForm<z.infer<typeof signInSchema>>({
-		resolver: zodResolver(signInSchema),
-		defaultValues: {
-			email: '',
-			password: '',
-		},
-	})
-
-	const handleCredentialsSignIn = async (
-		values: z.infer<typeof signInSchema>
-	) => {
-		await authClient.signIn.email(
-			{
-				email: values.email,
-				password: values.password,
-			},
-			{
-				onRequest: () => {
-					setPendingCredentials(true)
-				},
-				onSuccess: async () => {
-					router.push('/')
-					router.refresh()
-				},
-				onError: () => {
-					setFormError('Invalid credentials')
-				},
-			}
-		)
-		setPendingCredentials(false)
-	}
-
-	const handleSignInWithGoogle = async () => {
-		await authClient.signIn.social(
-			{
-				provider: 'google',
-			},
-			{
-				onRequest: () => {
-					setPendingGoogle(true)
-				},
-				onSuccess: async () => {
-					router.push('/')
-					router.refresh()
-				},
-				onError: ctx => {
-					setFormError(ctx.error.message ?? 'Something went wrong.')
-				},
-			}
-		)
-		setPendingGoogle(false)
-	}
+	useEffect(() => {
+		if (state?.redirect) {
+			router.push(state.redirect)
+		}
+	}, [state?.redirect, router])
 
 	return (
 		<Card className='md:max-w-md mx-auto'>
@@ -93,74 +49,59 @@ export default function SignInForm() {
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(handleCredentialsSignIn)}
-						className='space-y-6'
-					>
-						{formError && (
-							<Alert variant='destructive'>
-								<AlertCircle className='h-4 w-4' />
-								<AlertTitle>Error</AlertTitle>
-								<AlertDescription>{formError}</AlertDescription>
-							</Alert>
-						)}
-						{['email', 'password'].map(field => (
-							<FormField
-								control={form.control}
-								key={field}
-								name={field as keyof z.infer<typeof signInSchema>}
-								render={({ field: fieldProps }) => (
-									<FormItem>
-										<FormLabel>
-											{field.charAt(0).toUpperCase() + field.slice(1)}
-										</FormLabel>
-										<FormControl>
-											<Input
-												type={field === 'password' ? 'password' : 'email'}
-												placeholder={`Enter your ${field}`}
-												{...fieldProps}
-												autoComplete={
-													field === 'password' ? 'current-password' : 'email'
-												}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
+				<Form action={action} className='space-y-6'>
+					{state?.message && (
+						<Alert variant='destructive'>
+							<AlertCircle className='h-4 w-4' />
+							<AlertTitle>Error</AlertTitle>
+							<AlertDescription>{state.message}</AlertDescription>
+						</Alert>
+					)}
+
+					{FORM_FIELDS.map(({ label, name, type, placeholder }) => (
+						<div key={name} className='flex flex-col gap-2'>
+							<div className='flex items-center'>
+								<Label
+									htmlFor={name}
+									className={cn(state?.errors?.[name] && 'text-destructive')}
+								>
+									{label}
+								</Label>
+								{name === 'password' && (
+									<Link
+										href='/forgot-password'
+										className='ml-auto inline-block text-sm underline-offset-4 hover:underline'
+									>
+										Forgot your password?
+									</Link>
 								)}
+							</div>
+							<Input
+								id={name}
+								name={name}
+								type={type}
+								placeholder={placeholder}
+								className={cn(state?.errors?.[name] && 'border-destructive')}
+								defaultValue={state?.data?.[name]}
 							/>
-						))}
-						<LoadingButton pending={pendingCredentials} className='w-full'>
-							Sign in
-						</LoadingButton>
-					</form>
+							{state?.errors?.[name] && (
+								<p className='text-destructive'>{state.errors[name]}</p>
+							)}
+						</div>
+					))}
+
+					<SubmitButton className='w-full'>Sign In</SubmitButton>
 				</Form>
-				<div className='mt-4'>
-					<LoadingButton
-						pending={pendingGoogle}
-						onClick={handleSignInWithGoogle}
-						className='w-full'
-						variant='outline'
-					>
-						Login with Google
-					</LoadingButton>
-				</div>
-				<Separator className='my-6' />
 
-				<div className='text-center'>
-					<Button asChild variant={'link'}>
-						<Link href='/sign-up' className='text-primary hover:underline'>
-							Don&apos;t have an account? Sign up
-						</Link>
-					</Button>
-				</div>
+				<Separator className='my-5' />
 
-				<Separator className='my-3' />
+				<SignInWithGoogle />
 
-				<div className='text-center'>
-					<Button asChild variant={'link'}>
-						<Link href='/forgot-password'>Forgot password?</Link>
-					</Button>
+				<div className='mt-4 text-center text-sm'>
+					Don&apos;t have an account?{' '}
+					<Link href='/sign-up' className='underline underline-offset-4'>
+						Sign up
+					</Link>
 				</div>
 			</CardContent>
 		</Card>
