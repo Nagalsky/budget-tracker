@@ -163,7 +163,6 @@ export async function resetPassword(
 				token,
 				newPassword: password,
 				redirect: true,
-				callbackURL: '/sign-in?reset=success',
 			},
 		})
 
