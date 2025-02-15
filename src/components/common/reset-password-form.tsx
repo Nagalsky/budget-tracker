@@ -73,7 +73,7 @@ export default function ResetPasswordForm() {
 							defaultValue={state?.data?.password}
 						/>
 						{state?.errors?.password && (
-							<p className='text-destructive'>{state.errors.password}</p>
+							<p className='text-destructive'>{state.errors.password[0]}</p>
 						)}
 					</div>
 
@@ -97,7 +97,9 @@ export default function ResetPasswordForm() {
 							defaultValue={state?.data?.confirmPassword}
 						/>
 						{state?.errors?.confirmPassword && (
-							<p className='text-destructive'>{state.errors.confirmPassword}</p>
+							<p className='text-destructive'>
+								{state.errors.confirmPassword[0]}
+							</p>
 						)}
 					</div>
 

@@ -68,7 +68,7 @@ export default function ForgotPasswordForm() {
 							defaultValue={state?.data?.email}
 						/>
 						{state?.errors?.email && (
-							<p className='text-destructive'>{state.errors.email}</p>
+							<p className='text-destructive'>{state.errors.email[0]}</p>
 						)}
 					</div>
 

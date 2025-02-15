@@ -96,7 +96,7 @@ export async function signUp(
 		return {
 			data: Object.fromEntries(formData.entries()),
 			errors: {},
-			message: 'Invalid credentials',
+			message: 'User already exists',
 		}
 	}
 }

@@ -1,12 +1,16 @@
 import { z } from 'zod'
 
-const getPasswordSchema = (type: 'password' | 'confirmPassword') =>
+const getPasswordSchema = () =>
 	z
 		.string()
-		.min(8, { message: `${type} must be atleast 8 characters` })
-		.max(32, { message: `${type} can not exceed 32 characters` })
+		.min(8, { message: 'Password must be atleast 8 characters' })
+		.max(32, { message: 'Password can not exceed 32 characters' })
 
-const getEmailSchema = () => z.string().email({ message: 'Invalid email' })
+const getEmailSchema = () =>
+	z
+		.string()
+		.min(1, { message: 'Field is required' })
+		.email({ message: 'Invalid email' })
 
 const getNameSchema = () =>
 	z
@@ -17,18 +21,18 @@ const getNameSchema = () =>
 export const signUpSchema = z.object({
 	name: getNameSchema(),
 	email: getEmailSchema(),
-	password: getPasswordSchema('password'),
+	password: getPasswordSchema(),
 })
 
 export const signInSchema = z.object({
 	email: getEmailSchema(),
-	password: getPasswordSchema('password'),
+	password: getPasswordSchema(),
 })
 
 export const resetPasswordSchema = z
 	.object({
-		password: getPasswordSchema('password'),
-		confirmPassword: getPasswordSchema('confirmPassword'),
+		password: getPasswordSchema(),
+		confirmPassword: getPasswordSchema(),
 		token: z.string(),
 	})
 	.refine(data => data.password === data.confirmPassword, {

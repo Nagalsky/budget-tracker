@@ -44,10 +44,16 @@ export default function SignUpForm() {
 	const [state, action] = useActionState(signUp, undefined)
 
 	useEffect(() => {
-		if (state && !state.message) {
+		if (
+			state &&
+			Object.keys(state?.errors ?? {}).length === 0 &&
+			!state.message
+		) {
 			router.push('/')
 		}
 	}, [router, state])
+
+	console.log('state: ', state)
 
 	return (
 		<Card className='md:max-w-md mx-auto'>
@@ -83,7 +89,7 @@ export default function SignUpForm() {
 								defaultValue={state?.data?.[name]}
 							/>
 							{state?.errors?.[name] && (
-								<p className='text-destructive'>{state.errors[name]}</p>
+								<p className='text-destructive'>{state.errors[name][0]}</p>
 							)}
 						</div>
 					))}

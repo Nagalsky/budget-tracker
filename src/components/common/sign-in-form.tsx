@@ -85,7 +85,7 @@ export default function SignInForm() {
 								defaultValue={state?.data?.[name]}
 							/>
 							{state?.errors?.[name] && (
-								<p className='text-destructive'>{state.errors[name]}</p>
+								<p className='text-destructive'>{state.errors[name][0]}</p>
 							)}
 						</div>
 					))}
