@@ -9,7 +9,7 @@ const getPasswordSchema = () =>
 const getEmailSchema = () =>
 	z
 		.string()
-		.min(1, { message: 'Field is required' })
+		.min(1, { message: 'Email is required' })
 		.email({ message: 'Invalid email' })
 
 const getNameSchema = () =>

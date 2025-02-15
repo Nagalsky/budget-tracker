@@ -53,8 +53,6 @@ export default function SignUpForm() {
 		}
 	}, [router, state])
 
-	console.log('state: ', state)
-
 	return (
 		<Card className='md:max-w-md mx-auto'>
 			<CardHeader>
