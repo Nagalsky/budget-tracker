@@ -30,7 +30,7 @@ const SignInWithGoogle = () => {
 			onClick={handleSignInWithGoogle}
 			disabled={isLoading}
 		>
-			{isLoading && <Loader2 className='mr-2' />}Login with Google
+			{isLoading && <Loader2 className='mr-2 animate-spin' />}Login with Google
 		</Button>
 	)
 }
