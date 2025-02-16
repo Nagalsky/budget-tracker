@@ -109,7 +109,7 @@ export function CurrencyComboBox() {
             <DrawerTitle>Currency</DrawerTitle>
             <DrawerDescription>Set your currency.</DrawerDescription>
           </DrawerHeader>
-          <div className="border-t">
+          <div className="border-t py-6">
             <OptionList
               selectedOption={selectedOption}
               setOpen={setOpen}
