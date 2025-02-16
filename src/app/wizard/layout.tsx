@@ -1,14 +1,11 @@
-import { Header } from '@/components/common/header'
-
 export default function RootLayout({
 	children,
 }: Readonly<{
 	children: React.ReactNode
 }>) {
 	return (
-		<>
-			<Header />
+		<main className='flex flex-col items-center justify-center min-h-dvh'>
 			{children}
-		</>
+		</main>
 	)
 }

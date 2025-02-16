@@ -38,7 +38,7 @@ export async function signIn(
 				email,
 				password,
 				redirect: true,
-				callbackURL: '/',
+				callbackURL: '/wizard',
 			},
 		})
 
@@ -82,7 +82,7 @@ export async function signUp(
 				email,
 				password,
 				redirect: true,
-				callbackURL: '/',
+				callbackURL: '/wizard',
 			},
 		})
 
