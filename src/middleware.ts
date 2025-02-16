@@ -1,6 +1,5 @@
-import type { Session } from '@/lib/auth'
-import { betterFetch } from '@better-fetch/fetch'
-import { NextResponse, type NextRequest } from 'next/server'
+import { getSessionCookie } from 'better-auth'
+import { NextRequest, NextResponse } from 'next/server'
 
 const authRoutes = ['/sign-in', '/sign-up']
 const passwordRoutes = ['/reset-password', '/forgot-password']
@@ -10,17 +9,9 @@ export default async function authMiddleware(request: NextRequest) {
 	const isAuthRoute = authRoutes.includes(pathName)
 	const isPasswordRoute = passwordRoutes.includes(pathName)
 
-	const { data: session } = await betterFetch<Session>(
-		'/api/auth/get-session',
-		{
-			baseURL: process.env.BETTER_AUTH_URL,
-			headers: {
-				cookie: request.headers.get('cookie') || '',
-			},
-		}
-	)
+	const sessionCookie = getSessionCookie(request)
 
-	if (!session) {
+	if (!sessionCookie) {
 		if (isAuthRoute || isPasswordRoute) {
 			return NextResponse.next()
 		}

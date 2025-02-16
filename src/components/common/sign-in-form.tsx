@@ -70,7 +70,7 @@ export default function SignInForm() {
 								{name === 'password' && (
 									<Link
 										href='/forgot-password'
-										className='ml-auto inline-block text-sm underline-offset-4 hover:underline'
+										className='underline underline-offset-4 text-sm ml-auto'
 									>
 										Forgot your password?
 									</Link>

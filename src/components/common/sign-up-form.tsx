@@ -100,8 +100,9 @@ export default function SignUpForm() {
 				<SignInWithGoogle />
 
 				<div className='mt-4 text-center text-sm'>
-					<Link href='/sign-in' className='text-primary hover:underline'>
-						Already have an account? Sign in
+					Already have an account?{' '}
+					<Link href='/sign-in' className='underline underline-offset-4'>
+						Sign in
 					</Link>
 				</div>
 			</CardContent>
