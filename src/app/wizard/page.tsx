@@ -8,27 +8,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { getSession } from "@/lib/get-session";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export default async function Wizard() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.user) {
-    redirect("/sign-in");
-  }
+  const { user } = await getSession();
 
   return (
     <section className="w-full py-8 md:py-12">
       <div className="container lg:max-w-3xl">
         <div className="space-y-5 text-center">
-          <h1 className="text-center text-3xl md:text-5xl">
-            Welcome, <span className="ml-2 font-bold">{session.user.name}</span>{" "}
-            👋🏽
+          <h1 className="text-center text-3xl md:text-4xl">
+            Welcome, <span className="ml-2 font-bold">{user.name}</span> 👋🏽
           </h1>
           <h2 className="text-muted-foreground text-center text-lg">
             Let&apos;s get started by setting up your currency.
