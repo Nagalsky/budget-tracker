@@ -7,7 +7,6 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
@@ -110,7 +109,7 @@ export function CurrencyComboBox() {
             <DrawerTitle>Currency</DrawerTitle>
             <DrawerDescription>Set your currency.</DrawerDescription>
           </DrawerHeader>
-          <div className="mt-4 border-t">
+          <div className="border-t">
             <OptionList
               selectedOption={selectedOption}
               setOpen={setOpen}
@@ -134,7 +133,7 @@ function OptionList({
 }) {
   return (
     <Command>
-      <CommandInput placeholder="Filter currency..." />
+      {/* <CommandInput placeholder="Filter currency..." /> */}
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup>
@@ -142,6 +141,7 @@ function OptionList({
             <CommandItem
               key={currency.value}
               value={currency.value}
+              className="max-sm:py-2.5"
               onSelect={(value) => {
                 setSelectedOption(
                   currencies.find((priority) => priority.value === value) ||
