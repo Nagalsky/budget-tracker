@@ -58,14 +58,14 @@ export default function ForgotPasswordForm() {
     return (
       <div className="flex min-h-screen items-center justify-center px-4 py-12">
         <Card className="w-full max-w-md">
-          <CardContent className="pt-6">
-            <Alert className="mb-4">
+          <CardContent className="space-y-5 pt-6">
+            <Alert variant={"success"}>
               <AlertTitle>Check your email</AlertTitle>
               <AlertDescription>
                 We have sent you a password reset link. Please check your email.
               </AlertDescription>
             </Alert>
-            <div className="mt-4 text-center text-sm">
+            <div className="text-center text-sm">
               <Link href="/sign-up" className="underline underline-offset-4">
                 Back to sign in
               </Link>
