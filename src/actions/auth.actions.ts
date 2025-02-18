@@ -137,7 +137,7 @@ export async function forgotPassword(
     data: { email, token, expires },
   });
 
-  const resetLink = `${process.env.NEXTAUTH_URL}/reset-password?token=${token}`;
+  const resetLink = `${process.env.AUTH_URL}/reset-password?token=${token}`;
   await resend.emails.send({
     from: process.env.RESEND_EMAIL_FROM!,
     to: email,
