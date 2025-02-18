@@ -39,5 +39,4 @@ export const {
       };
     },
   },
-  trustHost: true,
 });
