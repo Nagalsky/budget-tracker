@@ -47,6 +47,12 @@ export async function register(data: z.infer<typeof SignUpSchema>) {
       },
     });
 
+    await signIn("credentials", {
+      email: loverCaseEmail,
+      password,
+      redirect: false,
+    });
+
     return {
       redirect: {
         callbackUrl: "/wizard",

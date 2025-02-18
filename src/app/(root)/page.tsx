@@ -1,16 +1,23 @@
-import Header from "@/components/common/header";
-import { SignOut } from "@/components/common/SignOut";
+import prisma from "@/lib/prisma";
 import { getSession } from "@/utils/get-session";
+import { redirect } from "next/navigation";
 
 export default async function HomePage() {
   const user = await getSession();
 
-  console.log("user!!!: ", user);
+  const userSettings = await prisma.userSettings.findUnique({
+    where: {
+      userId: user.id,
+    },
+  });
+
+  if (!userSettings) {
+    redirect("/wizard");
+  }
+
   return (
     <div className="container">
-      <Header />
       <h1>fwfw</h1>
-      <SignOut />
     </div>
   );
 }

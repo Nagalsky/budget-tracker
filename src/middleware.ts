@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
 import authConfig from "./lib/auth.config";
 
-export const { auth } = NextAuth(authConfig);
+const { auth } = NextAuth(authConfig);
 
 const authRoutes = [
   "/sign-in",
