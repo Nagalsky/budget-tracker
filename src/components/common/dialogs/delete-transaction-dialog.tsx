@@ -3,7 +3,6 @@
 import { deleteTransaction } from "@/actions/transactions.actions";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -11,6 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FC } from "react";
 import { toast } from "sonner";
@@ -52,8 +52,13 @@ const DeleteTransactionDialog: FC<Props> = ({
     },
   });
 
+  const handleDelete = () => {
+    toast.loading("Deleting transaction...", { id: transactionId });
+    deleteMutation.mutate(transactionId);
+  };
+
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
+    <AlertDialog open={open}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutly sure?</AlertDialogTitle>
@@ -64,15 +69,13 @@ const DeleteTransactionDialog: FC<Props> = ({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={() => {
-              toast.loading("Deleting transaction...", { id: transactionId });
-              deleteMutation.mutate(transactionId);
-            }}
+          <Button
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
             className="bg-red-500 text-white hover:bg-red-600"
           >
-            Delete
-          </AlertDialogAction>
+            {deleteMutation.isPending ? "Deliting..." : "Delete"}
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
