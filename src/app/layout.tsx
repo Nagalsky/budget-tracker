@@ -17,7 +17,8 @@ export const metadata: Metadata = {
     "Next.js",
     "React",
     "Tailwind CSS",
-    "Server Components",
+    "Server actions",
+    "Prisma",
     "Radix UI",
   ],
   authors: [
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     images: [
       {
-        url: siteConfig.ogImage,
+        url: new URL(siteConfig.ogImage, siteConfig.url).toString(),
         width: 1200,
         height: 630,
         alt: siteConfig.name,
