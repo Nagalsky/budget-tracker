@@ -137,7 +137,7 @@ async function getTransactionsHistory(userId: string, from: Date, to: Date) {
     where: {
       userId,
       date: {
-        gte: from,
+        gte: endOfDay(from),
         lte: endOfDay(to),
       },
     },

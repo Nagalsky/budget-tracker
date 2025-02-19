@@ -33,7 +33,7 @@ async function getBalanceStats(userId: string, from: Date, to: Date) {
     where: {
       userId,
       date: {
-        gte: from,
+        gte: endOfDay(from),
         lte: endOfDay(to),
       },
     },
@@ -76,7 +76,7 @@ async function getCategories(userId: string, from: Date, to: Date) {
     where: {
       userId,
       date: {
-        gte: from,
+        gte: endOfDay(from),
         lte: endOfDay(to),
       },
     },
