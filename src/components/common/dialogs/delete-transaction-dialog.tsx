@@ -31,19 +31,18 @@ const DeleteTransactionDialog: FC<Props> = ({
   const deleteMutation = useMutation({
     mutationFn: deleteTransaction,
     onSuccess: async () => {
-      toast.success("Transaction deleted successfully", {
-        id: transactionId,
-      });
-
       await Promise.all(
         [
           ["history"],
-          ["categories"],
           ["overview", "stats"],
           ["overview", "history"],
           ["transactions"],
         ].map((queryKey) => queryClient.refetchQueries({ queryKey })),
       );
+
+      toast.success("Transaction deleted successfully", {
+        id: transactionId,
+      });
 
       setOpen(false);
     },

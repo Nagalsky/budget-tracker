@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     images: [
       {
-        url: "https://budget-tracker-rust-gamma.vercel.app/og.png",
+        url: `${siteConfig.description}${siteConfig.ogImage}`,
         width: 1600,
         height: 840,
         alt: siteConfig.name,
