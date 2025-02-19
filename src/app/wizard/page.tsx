@@ -8,11 +8,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { getSession } from "@/utils/get-session";
+import { getUser } from "@/utils/get-user";
 import Link from "next/link";
 
 export default async function Wizard() {
-  const user = await getSession();
+  const user = await getUser();
 
   return (
     <section className="w-full py-8 md:py-12">
