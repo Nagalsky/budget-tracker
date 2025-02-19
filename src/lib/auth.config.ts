@@ -20,7 +20,7 @@ export default {
           },
         });
 
-        if (!user || !password || !email) return null;
+        if (!user || !user.password || !password || !email) return null;
 
         const passwordsMatch = await bcryptjs.compare(password, user.password);
 

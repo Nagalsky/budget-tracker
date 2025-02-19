@@ -44,12 +44,7 @@ model User {
   email         String?        @unique
   emailVerified DateTime?      @map("email_verified")
   image         String?
-  password      String
-  premium       Boolean        @default(false)
-  role          String         @default("user")
-  banned        Boolean        @default(false)
-  banReason     String?
-  banExpires    Int?
+  password      String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   accounts      Account[]

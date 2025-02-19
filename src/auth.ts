@@ -26,6 +26,25 @@ export const {
     //   token.image = existinUser.image;
     //   return token;
     // },
+    // async signIn({ user, account }) {
+    //   if (account?.provider === "google") {
+    //     const existingUser = await prisma.user.findUnique({
+    //       where: { email: user.email! },
+    //     });
+
+    //     if (!existingUser) {
+    //       // Create new user without password for OAuth
+    //       await prisma.user.create({
+    //         data: {
+    //           email: user.email!,
+    //           name: user.name,
+    //           image: user.image,
+    //         },
+    //       });
+    //     }
+    //   }
+    //   return true;
+    // },
     async session({ token, session }) {
       return {
         ...session,
@@ -37,4 +56,5 @@ export const {
       };
     },
   },
+  trustHost: true,
 });
