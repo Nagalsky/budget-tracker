@@ -255,7 +255,7 @@ function TooltipRow({
             duration={0.5}
             preserveValue
             end={value}
-            decimals={0}
+            decimals={2}
             formattingFn={formattingFn}
             className="text-sm"
           />
