@@ -2,12 +2,12 @@
 import { DEFAULT_CURRENCY } from "@/constants/currencies";
 import prisma from "@/lib/prisma";
 import { UpdateUserCurrencySchema } from "@/schemas/user-settings.schema";
-import { getSession } from "@/utils/get-session";
+import { getUser } from "@/utils/get-user";
 import { revalidatePath } from "next/cache";
 
 export async function getUserCurrency() {
   try {
-    const user = await getSession();
+    const user = await getUser();
 
     let userSettings = await prisma.userSettings.findUnique({
       where: { userId: user.id },
@@ -38,7 +38,7 @@ export async function updateUserCurrency(currency: string) {
   }
 
   try {
-    const user = await getSession();
+    const user = await getUser();
 
     const userSettings = await prisma.userSettings.update({
       where: {

@@ -3,16 +3,8 @@ import { UserSettings } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 
 export function useGetCurrency() {
-  const { data, isFetching, isError, error, refetch } = useQuery<UserSettings>({
+  return useQuery<UserSettings>({
     queryKey: ["user-settings"],
     queryFn: () => getUserCurrency(),
   });
-
-  return {
-    data,
-    isFetching,
-    isError,
-    error,
-    refetch,
-  };
 }

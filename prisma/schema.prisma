@@ -108,17 +108,17 @@ model Category {
 model Transaction {
   id           String   @id @default(uuid())
   createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  updatedAt    DateTime @default(now())
   amount       Float
   description  String
   date         DateTime
-  userId       String   @map("user_id")
+  userId       String
   type         String   @default("income")
   category     String
-  categoryIcon String   @map("category_icon")
+  categoryIcon String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("transactions")
+  @@map("transaction")
 }
 
 model MonthHistory {

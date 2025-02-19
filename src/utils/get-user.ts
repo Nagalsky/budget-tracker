@@ -1,11 +1,21 @@
-import prisma from "@/lib/prisma";
+"use server";
 
-export const getUserByUserId = async (id: string) => {
-  const user = await prisma.user.findUnique({
-    where: {
-      id,
-    },
-  });
+import { auth } from "@/auth";
+import { AuthUser } from "@/types/next-auth";
+import { redirect } from "next/navigation";
 
-  return user;
-};
+export async function getUser() {
+  try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return redirect("/sign-in");
+    }
+
+    const user = session.user as AuthUser;
+
+    return user;
+  } catch {
+    return redirect("/sign-in?error=session");
+  }
+}

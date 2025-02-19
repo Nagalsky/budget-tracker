@@ -1,9 +1,12 @@
+import DashboardHero from "@/components/common/dashboard-hero";
+import History from "@/components/common/history";
+import Overview from "@/components/common/overview";
 import prisma from "@/lib/prisma";
-import { getSession } from "@/utils/get-session";
+import { getUser } from "@/utils/get-user";
 import { redirect } from "next/navigation";
 
 export default async function HomePage() {
-  const user = await getSession();
+  const user = await getUser();
 
   const userSettings = await prisma.userSettings.findUnique({
     where: {
@@ -16,8 +19,10 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="container">
-      <h1>fwfw</h1>
-    </div>
+    <>
+      <DashboardHero user={user} />
+      <Overview userSettings={userSettings} />
+      <History userSettings={userSettings} />
+    </>
   );
 }
