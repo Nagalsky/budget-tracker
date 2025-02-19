@@ -9,7 +9,7 @@ import {
   GetTransactionSchemaType,
 } from "@/schemas/transaction.schema";
 import { getUser } from "@/utils/get-user";
-import { endOfDay } from "date-fns";
+import { addDays } from "date-fns";
 
 export async function createTransaction(formData: CreateTransactionSchemaType) {
   const validatedFiels = CreateTransactionSchema.safeParse(formData);
@@ -137,8 +137,8 @@ async function getTransactionsHistory(userId: string, from: Date, to: Date) {
     where: {
       userId,
       date: {
-        gte: endOfDay(from),
-        lte: endOfDay(to),
+        gte: from,
+        lte: addDays(to, 1),
       },
     },
     orderBy: {
