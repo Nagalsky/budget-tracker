@@ -35,13 +35,15 @@ const DeleteTransactionDialog: FC<Props> = ({
         id: transactionId,
       });
 
-      await queryClient.invalidateQueries({
-        queryKey: ["transactions", "history"],
-      });
-
-      await queryClient.refetchQueries({
-        queryKey: ["overview", "history"],
-      });
+      await Promise.all(
+        [
+          ["history"],
+          ["categories"],
+          ["overview", "stats"],
+          ["overview", "history"],
+          ["transactions"],
+        ].map((queryKey) => queryClient.refetchQueries({ queryKey })),
+      );
 
       setOpen(false);
     },

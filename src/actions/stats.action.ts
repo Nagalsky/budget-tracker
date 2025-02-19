@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma";
 import { OverviewQuerySchema } from "@/schemas/overview.schema";
 import { getUser } from "@/utils/get-user";
-import { addDays } from "date-fns";
+import { endOfDay } from "date-fns";
 
 export async function getBalance(params: { from: Date; to: Date }) {
   const user = await getUser();
@@ -34,7 +34,7 @@ async function getBalanceStats(userId: string, from: Date, to: Date) {
       userId,
       date: {
         gte: from,
-        lte: addDays(to, 1),
+        lte: endOfDay(to),
       },
     },
     _sum: {
@@ -77,7 +77,7 @@ async function getCategories(userId: string, from: Date, to: Date) {
       userId,
       date: {
         gte: from,
-        lte: to,
+        lte: endOfDay(to),
       },
     },
     _sum: {
