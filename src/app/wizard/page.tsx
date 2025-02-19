@@ -9,7 +9,12 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getUser } from "@/utils/get-user";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Wizard",
+};
 
 export default async function Wizard() {
   const user = await getUser();
