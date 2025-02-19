@@ -26,7 +26,7 @@ const CategoryList: FC<Props> = ({ type }) => {
         <SkeletonWrapper isLoading={isLoading}>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center justify-between gap-2">
+              <CardTitle className="flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
                   {type === "expense" ? (
                     <TrendingDown className="size-12 items-center rounded-lg bg-red-400/10 p-2 text-red-500" />
@@ -55,7 +55,7 @@ const CategoryList: FC<Props> = ({ type }) => {
             </CardHeader>
             <Separator />
             {!availableData && (
-              <div className="flex h-40 w-full flex-col items-center justify-center">
+              <div className="flex h-40 w-full flex-col items-center justify-center px-4 text-center">
                 <p>
                   No
                   <span

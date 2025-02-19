@@ -172,9 +172,9 @@ const History: FC<Props> = ({ userSettings }) => {
                 </ResponsiveContainer>
               )}
               {!dataAvailable && (
-                <Card className="bg-background flex h-[300px] flex-col items-center justify-center">
-                  <p>No data fir the selected period</p>
-                  <p className="text-sn text-muted-foreground">
+                <Card className="bg-background flex h-[300px] flex-col items-center justify-center px-4 text-center">
+                  <p>No data for the selected period</p>
+                  <p className="text-muted-foreground text-sm">
                     Try selecting a different period or adding new transaction
                   </p>
                 </Card>
