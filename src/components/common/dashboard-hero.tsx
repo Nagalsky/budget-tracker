@@ -9,7 +9,7 @@ type Props = {
 
 const DashboardHero: FC<Props> = ({ user }) => {
   return (
-    <section className="bg-accent py-8">
+    <section className="bg-secondary border-b py-8">
       <div className="container">
         <div className="flex flex-wrap justify-between gap-6">
           <h1 className="text-3xl font-bold">Hello, {user.name}! 👋🏽</h1>

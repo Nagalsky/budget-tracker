@@ -21,8 +21,8 @@ const navItems = [
     href: "/",
   },
   {
-    title: "Transaction",
-    href: "/transaction",
+    title: "Transactions",
+    href: "/transactions",
   },
   {
     title: "Manage",

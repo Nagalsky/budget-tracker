@@ -24,8 +24,7 @@ export async function getUserCurrency() {
 
     revalidatePath("/");
     return userSettings;
-  } catch (error) {
-    console.error("Failed to get user settings:", error);
+  } catch {
     throw new Error("Failed to get user settings");
   }
 }

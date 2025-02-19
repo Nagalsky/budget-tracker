@@ -43,7 +43,9 @@ const History: FC<Props> = ({ userSettings }) => {
     timeframe,
   });
 
-  const dataAvailable = historyData && historyData.length > 0;
+  const dataAvailable = historyData?.some(
+    ({ expense, income }) => expense > 0 || income > 0,
+  );
 
   return (
     <section className="py-6">
@@ -72,7 +74,7 @@ const History: FC<Props> = ({ userSettings }) => {
           </CardHeader>
           <CardContent>
             <SkeletonWrapper isLoading={isLoading}>
-              {dataAvailable ? (
+              {dataAvailable && (
                 <ResponsiveContainer width={"100%"} height={300}>
                   <BarChart height={300} data={historyData} barCategoryGap={5}>
                     <defs>
@@ -168,7 +170,8 @@ const History: FC<Props> = ({ userSettings }) => {
                     />
                   </BarChart>
                 </ResponsiveContainer>
-              ) : (
+              )}
+              {!dataAvailable && (
                 <Card className="bg-background flex h-[300px] flex-col items-center justify-center">
                   <p>No data fir the selected period</p>
                   <p className="text-sn text-muted-foreground">

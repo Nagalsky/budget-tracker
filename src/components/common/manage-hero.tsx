@@ -1,6 +1,6 @@
 const ManageHero = () => {
   return (
-    <section className="bg-accent py-8">
+    <section className="bg-secondary border-b py-8">
       <div className="container">
         <h1 className="text-3xl font-bold">Manage</h1>
         <p className="text-mutet-foreground">

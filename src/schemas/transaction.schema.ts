@@ -1,3 +1,5 @@
+import { MAX_DATE_RANGE_DAYS } from "@/constants/date-range";
+import { differenceInDays } from "date-fns";
 import { z } from "zod";
 
 export const CreateTransactionSchema = z.object({
@@ -11,3 +13,19 @@ export const CreateTransactionSchema = z.object({
 export type CreateTransactionSchemaType = z.infer<
   typeof CreateTransactionSchema
 >;
+
+export const GetTransactionSchema = z
+  .object({
+    from: z.coerce.date(),
+    to: z.coerce.date(),
+  })
+  .refine((args) => {
+    const { from, to } = args;
+    const days = differenceInDays(to, from);
+
+    const isValidRange = days >= 0 && days <= MAX_DATE_RANGE_DAYS;
+
+    return isValidRange;
+  });
+
+export type GetTransactionSchemaType = z.infer<typeof GetTransactionSchema>;
