@@ -244,6 +244,7 @@ function TooltipRow({
     },
     [formatter],
   );
+
   return (
     <div className="flex items-center gap-2">
       <div className={cn("size-4 rounded-full", bgColor)} />

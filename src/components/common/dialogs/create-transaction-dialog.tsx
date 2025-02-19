@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import { createTransaction } from "@/actions/transactions.actions";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -28,15 +30,15 @@ import { dateToUTCDate } from "@/lib/date-to-utc-date";
 import { cn } from "@/lib/utils";
 import {
   CreateTransactionSchema,
-  CreateTransactionSchemaType,
+  type CreateTransactionSchemaType,
 } from "@/schemas/transaction.schema";
-import { TransactionType } from "@/types/transaction.type";
+import type { TransactionType } from "@/types/transaction.type";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
-import { FC, useCallback, useState } from "react";
+import { type FC, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import CategoryPicker from "../category-picker";
@@ -141,11 +143,22 @@ const CreateTransactionDialog: FC<Props> = ({ trigger, type }) => {
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input
+                      type="text"
+                      {...field}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^0-9.,]/g, "");
+                        const normalized = value.replace(",", ".");
+                        if (normalized.split(".").length > 2) return;
+                        field.onChange(normalized);
+                      }}
+                      value={field.value}
+                    />
                   </FormControl>
                   <FormMessage />
                   <FormDescription>
-                    Transaction amout (required)
+                    Transaction amount (required) - Use period or comma as
+                    decimal separator
                   </FormDescription>
                 </FormItem>
               )}

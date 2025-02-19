@@ -5,6 +5,7 @@ export function formatterCurrency(currency: string) {
 
   return new Intl.NumberFormat(locale, {
     style: "currency",
+    minimumFractionDigits: 2,
     currency,
   });
 }
