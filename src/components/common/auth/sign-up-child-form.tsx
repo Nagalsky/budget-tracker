@@ -1,16 +1,9 @@
 "use client";
 
-import { register } from "@/actions/auth.actions";
+import { registerChild } from "@/actions/auth.actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -20,40 +13,52 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { SignUpSchema } from "@/schemas/auth.schema";
+import { useParent } from "@/hooks/use-parent";
+import { SignUpChildSchema } from "@/schemas/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const SignUpForm = () => {
+const SignUpChildForm = () => {
+  const { data: parent } = useParent();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
 
-  const form = useForm<z.infer<typeof SignUpSchema>>({
-    resolver: zodResolver(SignUpSchema),
+  const form = useForm<z.infer<typeof SignUpChildSchema>>({
+    resolver: zodResolver(SignUpChildSchema),
     defaultValues: {
       name: "",
       email: "",
       password: "",
       passwordConfirmation: "",
+      parentId: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof SignUpSchema>) {
+  useEffect(() => {
+    if (!parent) {
+      return;
+    }
+
+    form.setValue("parentId", parent.id);
+  }, [parent, form]);
+
+  async function onSubmit(values: z.infer<typeof SignUpChildSchema>) {
     setIsLoading(true);
-    const result = await register(values);
+    setError(null);
+    const result = await registerChild(values);
 
     if (result.error) {
       setError(result.error);
     }
 
-    if (result.redirect) {
-      router.push("/");
+    if (result.success) {
+      // router.push("/");
+      setError(null);
       router.refresh();
       form.reset();
     }
@@ -65,10 +70,7 @@ const SignUpForm = () => {
     <div className="flex min-h-screen items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Sign up</CardTitle>
-          <CardDescription>
-            Choose your preferred sign in method
-          </CardDescription>
+          <CardTitle className="text-2xl font-bold">Create child</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {error && (
@@ -145,35 +147,14 @@ const SignUpForm = () => {
                 )}
               />
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Signing up..." : "Sign up"}
+                {isLoading ? "Creating..." : "Create"}
               </Button>
             </form>
           </Form>
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background text-muted-foreground px-2">
-                Or continue with
-              </span>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            <Button variant="outline">Continue with Google</Button>
-          </div>
         </CardContent>
-        <CardFooter className="flex flex-wrap items-center justify-center gap-2">
-          <div className="text-muted-foreground text-sm">
-            Already have an account?{" "}
-            <Button variant="link" className="text-primary p-0" asChild>
-              <Link href="/sign-in">Sign in</Link>
-            </Button>
-          </div>
-        </CardFooter>
       </Card>
     </div>
   );
 };
 
-export default SignUpForm;
+export default SignUpChildForm;

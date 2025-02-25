@@ -3,6 +3,7 @@ import { siteConfig } from "@/config/site";
 import ReactQueryProvider from "@/providers/react-query-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 
@@ -72,8 +73,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
-            <Toaster richColors position="bottom-right" />
+            <SessionProvider>
+              {children}
+              <Toaster richColors position="bottom-right" />
+            </SessionProvider>
           </ThemeProvider>
         </ReactQueryProvider>
       </body>

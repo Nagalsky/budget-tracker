@@ -1,22 +1,32 @@
 import { DefaultSession, User } from "next-auth";
 import "next-auth/jwt";
 
-export interface AuthUser extends User {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
-  role: string;
+export enum UserRole {
+  parent = "parent",
+  child = "child",
 }
 
 declare module "next-auth" {
   interface Session {
-    user?: AuthUser & DefaultSession["user"];
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      image: string;
+      role: UserRole;
+    } & DefaultSession["user"];
+  }
+}
+
+declare module "next-auth" {
+  interface Session {
+    user?: User & DefaultSession["user"];
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    user?: AuthUser;
+    id: string;
+    role: UserRole;
   }
 }

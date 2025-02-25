@@ -1,6 +1,6 @@
 "use client";
-import { AuthUser } from "@/types/next-auth";
 import { LogOutIcon, UserIcon } from "lucide-react";
+import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -14,7 +14,7 @@ import {
 } from "../ui/dropdown-menu";
 
 type Props = {
-  user: AuthUser;
+  user: User;
 };
 
 const UserDropdown = ({ user }: Props) => {
@@ -22,7 +22,7 @@ const UserDropdown = ({ user }: Props) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="size-9 cursor-pointer">
-          {user.image && (
+          {user.image && user.name && (
             <Image
               src={user.image}
               width={20}
