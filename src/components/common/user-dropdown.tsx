@@ -22,13 +22,15 @@ const UserDropdown = ({ user }: Props) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="size-9 cursor-pointer">
-          <Image
-            src={user.image}
-            width={20}
-            height={20}
-            className="size-9"
-            alt={user.name}
-          />
+          {user.image && (
+            <Image
+              src={user.image}
+              width={20}
+              height={20}
+              className="size-9"
+              alt={user.name}
+            />
+          )}
           <AvatarFallback>
             <UserIcon className="size-4" />
           </AvatarFallback>

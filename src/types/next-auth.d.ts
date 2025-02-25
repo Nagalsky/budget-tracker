@@ -6,6 +6,7 @@ export interface AuthUser extends User {
   name: string;
   email: string;
   image: string;
+  role: string;
 }
 
 declare module "next-auth" {
