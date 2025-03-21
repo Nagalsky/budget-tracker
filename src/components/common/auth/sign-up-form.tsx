@@ -53,7 +53,7 @@ const SignUpForm = () => {
     }
 
     if (result.redirect) {
-      router.push("/");
+      router.push("/wizard");
       router.refresh();
       form.reset();
     }

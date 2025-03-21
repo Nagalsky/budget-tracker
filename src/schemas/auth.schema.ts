@@ -27,19 +27,6 @@ export const SignUpSchema = z
     path: ["passwordConfirmation"],
   });
 
-export const SignUpChildSchema = z
-  .object({
-    name: getNameSchema(),
-    email: getEmailSchema(),
-    password: getPasswordSchema(),
-    parentId: getNameSchema(),
-    passwordConfirmation: getPasswordSchema(),
-  })
-  .refine((data) => data.password === data.passwordConfirmation, {
-    message: "Passwords don't match",
-    path: ["passwordConfirmation"],
-  });
-
 export const SignInSchema = z.object({
   email: getEmailSchema(),
   password: z.string().min(1, "Please enter a valid password"),

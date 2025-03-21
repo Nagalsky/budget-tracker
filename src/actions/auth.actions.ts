@@ -7,10 +7,8 @@ import {
   ForgotPasswordSchema,
   ResetPasswordSchema,
   SignInSchema,
-  SignUpChildSchema,
   SignUpSchema,
 } from "@/schemas/auth.schema";
-import { UserRole } from "@prisma/client";
 import bcryptjs from "bcryptjs";
 import { AuthError } from "next-auth";
 import type { z } from "zod";
@@ -28,49 +26,40 @@ export async function register(data: z.infer<typeof SignUpSchema>) {
       return { error: "Passwords do not match" };
     }
 
-    const lowerCaseEmail = email.toLowerCase();
+    const loverCaseEmail = email.toLowerCase();
     const hashedPassword = await bcryptjs.hash(password, 10);
 
     const isUserExist = await prisma.user.findFirst({
       where: {
-        email: lowerCaseEmail,
+        email: loverCaseEmail,
       },
     });
 
     if (isUserExist) {
-      return { error: "User already exists" };
+      return { error: "User already exist" };
     }
 
-    await prisma.$transaction(async (tx) => {
-      const user = await tx.user.create({
-        data: {
-          email: lowerCaseEmail,
-          name,
-          password: hashedPassword,
-          role: UserRole.parent,
-        },
-      });
-
-      await tx.parent.create({
-        data: {
-          userId: user.id,
-        },
-      });
+    await prisma.user.create({
+      data: {
+        email: loverCaseEmail,
+        name,
+        password: hashedPassword,
+      },
     });
 
     await signIn("credentials", {
-      email: lowerCaseEmail,
+      email: loverCaseEmail,
       password,
       redirect: false,
     });
 
     return {
       redirect: {
-        callbackUrl: "/",
+        callbackUrl: "/wizard",
       },
     };
   } catch {
-    return { error: "An error occurred" };
+    return { error: "An error occured" };
   }
 }
 
@@ -189,55 +178,4 @@ export async function resetPassword(data: z.infer<typeof ResetPasswordSchema>) {
 
   await prisma.passwordResetToken.delete({ where: { id: resetToken.id } });
   return { success: true, redirect: "/sign-in?reset=success" };
-}
-
-export async function registerChild(data: z.infer<typeof SignUpChildSchema>) {
-  try {
-    const validatedFields = SignUpChildSchema.parse(data);
-    if (!validatedFields) {
-      return { error: "Invalid input data" };
-    }
-
-    const { name, email, password, passwordConfirmation, parentId } =
-      validatedFields;
-
-    if (password !== passwordConfirmation) {
-      return { error: "Passwords do not match" };
-    }
-
-    const lowerCaseEmail = email.toLowerCase();
-    const hashedPassword = await bcryptjs.hash(password, 10);
-
-    const isUserExist = await prisma.user.findFirst({
-      where: {
-        email: lowerCaseEmail,
-      },
-    });
-
-    if (isUserExist) {
-      return { error: "User already exists" };
-    }
-
-    await prisma.$transaction(async (tx) => {
-      await tx.user.create({
-        data: {
-          email: lowerCaseEmail,
-          name,
-          password: hashedPassword,
-          role: UserRole.child,
-          child: {
-            create: {
-              parentId: parentId,
-            },
-          },
-        },
-      });
-    });
-
-    return {
-      success: true,
-    };
-  } catch {
-    return { error: "An error occurred" };
-  }
 }

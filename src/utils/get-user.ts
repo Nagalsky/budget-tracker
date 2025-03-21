@@ -1,4 +1,7 @@
+"use server";
+
 import { auth } from "@/auth";
+import { AuthUser } from "@/types/next-auth";
 import { redirect } from "next/navigation";
 
 export async function getUser() {
@@ -9,7 +12,9 @@ export async function getUser() {
       return redirect("/sign-in");
     }
 
-    return session.user;
+    const user = session.user as AuthUser;
+
+    return user;
   } catch {
     return redirect("/sign-in?error=session");
   }

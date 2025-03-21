@@ -1,6 +1,8 @@
-import { UserRole } from "@prisma/client";
+import NextAuth from "next-auth";
 import { NextResponse } from "next/server";
-import { auth } from "./auth";
+import authConfig from "./lib/auth.config";
+
+const { auth } = NextAuth(authConfig);
 
 const authRoutes = [
   "/sign-in",
@@ -11,13 +13,10 @@ const authRoutes = [
 
 export default auth(async (request) => {
   const pathName = request.nextUrl.pathname;
+  const sessionCookie = !!request.auth;
   const isAuthRoute = authRoutes.includes(pathName);
-  const session = !request.auth;
 
-  const isParent = request.auth?.user.role === UserRole.parent;
-  const isChild = request.auth?.user.role === UserRole.child;
-
-  if (session) {
+  if (!sessionCookie) {
     if (isAuthRoute) {
       return NextResponse.next();
     }
@@ -26,14 +25,6 @@ export default auth(async (request) => {
 
   if (isAuthRoute) {
     return NextResponse.redirect(new URL("/", request.url));
-  }
-
-  if (isParent && pathName === "/") {
-    return NextResponse.redirect(new URL("/parent", request.url));
-  }
-
-  if (isChild && pathName === "/") {
-    return NextResponse.redirect(new URL("/child", request.url));
   }
 
   return NextResponse.next();
