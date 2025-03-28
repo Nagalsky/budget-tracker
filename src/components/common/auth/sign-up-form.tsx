@@ -46,6 +46,7 @@ const SignUpForm = () => {
 
   async function onSubmit(values: z.infer<typeof SignUpSchema>) {
     setIsLoading(true);
+    setError(null);
     const result = await register(values);
 
     if (result.error) {

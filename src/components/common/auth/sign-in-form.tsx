@@ -42,6 +42,7 @@ const SignInForm = () => {
 
   async function onSubmit(values: z.infer<typeof SignInSchema>) {
     setIsLoading(true);
+    setError(null);
     const result = await login(values);
 
     if (result.error) {
