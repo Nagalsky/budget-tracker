@@ -69,7 +69,9 @@ const DeleteTransactionDialog: FC<Props> = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel onClick={() => setOpen(false)}>
+            Cancel
+          </AlertDialogCancel>
           <Button
             onClick={handleDelete}
             disabled={deleteMutation.isPending}
